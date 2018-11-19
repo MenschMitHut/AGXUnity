@@ -29,7 +29,7 @@ namespace AGXUnity.Collide
     /// <returns>Shape transform to be used between native geometry and shape.</returns>
     public override agx.AffineMatrix4x4 GetNativeGeometryOffset()
     {
-      return agx.AffineMatrix4x4.rotate( agx.Vec3.Z_AXIS(), agx.Vec3.Y_AXIS() ) * agx.AffineMatrix4x4.translate( transform.position.ToHandedVec3() + new Vector3( 0.5f * GetWidth(), 0, 0.5f * GetHeight() ).ToHandedVec3() );
+      return HeightFieldUtils.CalculateNativeOffset( transform, GetTerrainData() );
     }
 
     /// <summary>
@@ -93,22 +93,18 @@ namespace AGXUnity.Collide
     /// <returns>Native height field shape object.</returns>
     protected override agxCollide.Shape CreateNative()
     {
-      TerrainData terrainData = GetTerrainData();
+      var terrainData = GetTerrainData();
       if ( terrainData == null )
         return null;
 
-      Vector3 scale = terrainData.heightmapScale;
-      int[] res = new int[]{ terrainData.heightmapWidth, terrainData.heightmapHeight };
-      float[,] heights = terrainData.GetHeights( 0, 0, res[ 0 ], res[ 1 ] );
-
-      int resX = res[ 0 ];
-      int resY = res[ 1 ];
-      agx.RealVector agxHeights = new agx.RealVector( resX * resY );
-      for ( int x = resX - 1; x >= 0; --x )
-        for ( int y = resY - 1; y >= 0; --y )
-          agxHeights.Add( heights[ x, y ] * scale.y );
-
-      agxCollide.HeightField hf = new agxCollide.HeightField( (uint)res[ 0 ], (uint)res[ 1 ], GetWidth(), GetHeight(), agxHeights, false, 150.0 );
+      var heights = HeightFieldUtils.FindHeights( terrainData );
+      var hf = new agxCollide.HeightField( (uint)heights.ResolutionX,
+                                           (uint)heights.ResolutionY,
+                                           GetWidth(),
+                                           GetHeight(),
+                                           heights.Heights,
+                                           false,
+                                           150.0 );
       return hf;
     }
   }

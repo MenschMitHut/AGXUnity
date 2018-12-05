@@ -169,7 +169,7 @@ namespace AGXUnityEditor.Tools
       if ( obj == null )
         return null;
 
-      var types = Assembly.Load( "Assembly-CSharp-Editor" ).GetTypes();
+      var types = Assembly.Load( "AGXUnityEditor" ).GetTypes();
       var assignableFromTypes = new List<Type>();
       foreach ( var type in types ) {
         var customToolAttributes = type.GetCustomAttributes( typeof( CustomTool ), false );

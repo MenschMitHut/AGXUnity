@@ -141,7 +141,7 @@ namespace AGXUnity.Utils
     /// <param name="mesh">The mesh.</param>
     /// <param name="parent">Parent game object that transforms the mesh.</param>
     /// <returns>Result of the test.</returns>
-    public static Raycast.TriangleHit TestAllTriangles( Ray worldRay, float rayLength, UnityEngine.Mesh mesh, GameObject parent )
+    public static Raycast.TriangleHit TestAllTriangles( Ray worldRay, float rayLength, Mesh mesh, GameObject parent )
     {
       if ( mesh == null || parent == null )
         return Raycast.TriangleHit.Invalid;
@@ -223,12 +223,12 @@ namespace AGXUnity.Utils
     /// <param name="worldRay">Ray given in world coordinate system.</param>
     /// <param name="rayLength">Length of the ray.</param>
     /// <returns>Data with result, result.Valid == true if the ray intersects a triangle.</returns>
-    public static Raycast.TriangleHit FindClosestTriangle( GameObject parentGameObject, UnityEngine.Ray worldRay, float rayLength = 500.0f )
+    public static Raycast.TriangleHit FindClosestTriangle( GameObject parentGameObject, Ray worldRay, float rayLength = 500.0f )
     {
       if ( parentGameObject == null )
         return Raycast.TriangleHit.Invalid;
 
-      MeshFilter[] meshFilters = parentGameObject.GetComponentsInChildren<UnityEngine.MeshFilter>();
+      MeshFilter[] meshFilters = parentGameObject.GetComponentsInChildren<MeshFilter>();
       if ( meshFilters.Length == 0 )
         return Raycast.TriangleHit.Invalid;
 

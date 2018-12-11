@@ -14,6 +14,10 @@ namespace AGXUnity.Utils
 
     public static NativeHeights FindHeights( TerrainData data )
     {
+      // width:  Number of samples to retrieve along the heightmap's x axis.
+      // height: Number of samples to retrieve along the heightmap's y axis.
+      // The array has the dimensions [height,width] and is indexed as [y,x].
+
       var result = new NativeHeights()
       {
         ResolutionX = data.heightmapWidth,
@@ -23,9 +27,9 @@ namespace AGXUnity.Utils
       Vector3 scale = data.heightmapScale;
       float[,] heights = data.GetHeights( 0, 0, result.ResolutionX, result.ResolutionY );
 
-      for ( int x = result.ResolutionX - 1; x >= 0; --x )
-        for ( int y = result.ResolutionY - 1; y >= 0; --y )
-          result.Heights.Add( heights[ x, y ] * scale.y );
+      for ( int y = result.ResolutionY - 1; y >= 0; --y )
+        for ( int x = result.ResolutionX - 1; x >= 0; --x )
+          result.Heights.Add( heights[ y, x ] * scale.y );
 
       return result;
     }

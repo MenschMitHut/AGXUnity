@@ -248,11 +248,14 @@ namespace AGXUnityEditor.Tools
         dropArea = GUILayoutUtility.GetLastRect();
 
         bool resetMaterials = GUILayout.Button( GUI.MakeLabel( "Reset",
-                                              false,
-                                              "Reset shapes material to null." ),
-                               skin.button,
-                               GUILayout.Width( 42 ) ) &&
-                               EditorUtility.DisplayDialog( "Reset shape materials", "Reset all shapes material to default [null]?", "OK", "Cancel" );
+                                                               false,
+                                                               "Reset shapes material to null." ),
+                                                skin.button,
+                                                GUILayout.Width( 42 ) ) &&
+                                                EditorUtility.DisplayDialog( "Reset shape materials",
+                                                                             "Reset all shapes material to default [null]?",
+                                                                             "OK",
+                                                                             "Cancel" );
         if ( resetMaterials )
           AssignShapeMaterialToAllShapes( null );
       }

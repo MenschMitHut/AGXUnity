@@ -23,6 +23,12 @@ namespace AGXUnity
     }
 
     [SerializeField]
+    private List<DeformableTerrainShovel> m_shovels = new List<DeformableTerrainShovel>();
+
+    [HideInInspector]
+    public DeformableTerrainShovel[] Shovels { get{ return m_shovels.ToArray(); } }
+
+    [SerializeField]
     private RigidBody m_shovel = null;
 
     public RigidBody Shovel
@@ -38,6 +44,24 @@ namespace AGXUnity
     }
 
     public agxTerrain.Terrain Native { get; private set; } = null;
+
+    public bool Add( DeformableTerrainShovel shovel )
+    {
+      if ( shovel == null || m_shovels.Contains( shovel ) )
+        return false;
+
+      m_shovels.Add( shovel );
+
+      return true;
+    }
+
+    public bool Remove( DeformableTerrainShovel shovel )
+    {
+      if ( shovel == null )
+        return false;
+
+      return m_shovels.Remove( shovel );
+    }
 
     protected override bool Initialize()
     {

@@ -93,7 +93,7 @@ namespace AGXUnity
         m_nativeShovel = new agxTerrain.Shovel( Shovel.Native,
                                                 new agx.Edge( topEdgeStart, topEdgeEnd ),
                                                 new agx.Edge( cuttingStart, cuttingEnd ) );
-        Native.addShovel( m_nativeShovel );
+        Native.add( m_nativeShovel );
         m_nativeShovel.setVerticalBladeSoilMergeDistance( 0.5 );
       }
 
@@ -137,7 +137,7 @@ namespace AGXUnity
       foreach ( var index in modifiedVertices ) {
         var i = (int)index.x;
         var j = (int)index.y;
-        var h = (float)Native.getTerrainHeight( index );
+        var h = (float)Native.getHeight( index );
 
         result[ 0, 0 ] = h / scale;
 
@@ -190,20 +190,22 @@ namespace AGXUnity
       if ( m_nativeShovel == null )
         return;
 
-      var frame = m_nativeShovel.getRigidBody().getFrame();
+      var collection = Native.getToolCollection( m_nativeShovel );
+
       Gizmos.color = Color.red;
-      Gizmos.DrawLine( frame.transformPointToWorld( m_nativeShovel.getLocalCuttingEdge().p1 ).ToHandedVector3(),
-                       frame.transformPointToWorld( m_nativeShovel.getLocalCuttingEdge().p2 ).ToHandedVector3() );
+      Gizmos.DrawLine( m_nativeShovel.getCuttingEdgeWorld().p1.ToHandedVector3(),
+                       m_nativeShovel.getCuttingEdgeWorld().p2.ToHandedVector3() );
       Gizmos.color = Color.green;
-      Gizmos.DrawLine( frame.transformPointToWorld( m_nativeShovel.getLocalTopEdge().p1 ).ToHandedVector3(),
-                       frame.transformPointToWorld( m_nativeShovel.getLocalTopEdge().p2 ).ToHandedVector3() );
-      Gizmos.DrawLine( frame.transformPointToWorld( m_nativeShovel.getLocalTopEdge().p1 ).ToHandedVector3(),
-                       frame.transformPointToWorld( m_nativeShovel.getLocalTopEdge().p1 ).ToHandedVector3() + frame.transformVectorToWorld( m_nativeShovel.getLocalForward() ).ToHandedVector3() );
+      Gizmos.DrawLine( m_nativeShovel.getTopEdgeWorld().p1.ToHandedVector3(),
+                       m_nativeShovel.getTopEdgeWorld().p2.ToHandedVector3() );
+      var topEdgeCenter = 0.5f * ( m_nativeShovel.getTopEdgeWorld().p1 + m_nativeShovel.getTopEdgeWorld().p2 ).ToHandedVector3();
+      Gizmos.DrawLine( topEdgeCenter,
+                       topEdgeCenter + collection.getActiveZone().getForwardVectorInWorld().ToHandedVector3() );
 
       if ( m_fractureShapeMesh == null )
-        m_fractureShapeMesh = CreateMesh( m_nativeShovel.getFractureShape() );
+        m_fractureShapeMesh = CreateMesh( collection.getActiveZone().getFractureShape() );
       if ( m_innerShapeMesh == null )
-        m_innerShapeMesh = CreateMesh( m_nativeShovel.getInnerShape() );
+        m_innerShapeMesh = CreateMesh( collection.getActiveZone().getInnerShape() );
 
       if ( m_fractureShapeMesh != null ) {
         Gizmos.color = Color.green;
